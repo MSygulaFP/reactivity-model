@@ -1,0 +1,48 @@
+<form class="w-7/12 mx-auto my-16 flex gap-4" [formGroup]="newTodoForm" (ngSubmit)="addTodo()">
+  <input type="text" formControlName="title" placeholder="What do you need to do?" class="block p-2.5 w-full z-20 text-sm text-gray-900 bg-gray-50 rounded-lg rounded-s-gray-100 rounded-s-2 border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:border-blue-500">
+  <button class="font-medium text-white bg-blue-700 rounded-lg border border-blue-700 hover:bg-blue-800 focus:ring-4 p-2.5 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">+</button>
+</form>
+
+<div class="w-7/12 mx-auto my-16 flex gap-52 items-start justify-between">
+  <div class="todos w-full">
+    <h3 class="text-2xl text-white">Todos</h3>
+
+    <div
+      #todoList="cdkDropList"
+      cdkDropList
+      [cdkDropListData]="uncompletedTodos()"
+      [cdkDropListConnectedTo]="[doneList]"
+      class="mt-4 min-h-10 w-full bg-slate-700 py-2 px-4 rounded-lg"
+      (cdkDropListDropped)="removeTodoFromComplete($event)"
+    >
+      @for (todo of uncompletedTodos(); track todo.id) {
+        <div class="my-4 p-6 rounded-lg bg-white text-slate-900" cdkDrag>
+          {{ todo.title }}
+        </div>
+      } @empty {
+        <div class="text-center p-5">Nothing to do...</div>
+      }
+    </div>
+  </div>
+
+  <div class="todos w-full">
+    <h3 class="text-2xl text-white">Completed</h3>
+
+    <div
+      #doneList="cdkDropList"
+      cdkDropList
+      [cdkDropListData]="completedTodos()"
+      [cdkDropListConnectedTo]="[todoList]"
+      class="mt-4 min-h-10 w-full bg-slate-700 py-2 px-4 rounded-lg"
+      (cdkDropListDropped)="completeTodo($event)"
+    >
+      @for (todo of completedTodos(); track todo.id) {
+        <div class="my-4 p-6 rounded-lg bg-white text-slate-900" cdkDrag>
+          {{ todo.title }}
+        </div>
+      } @empty {
+        <div class="text-center p-5">Drop here</div>
+      }
+    </div>
+  </div>
+</div>
